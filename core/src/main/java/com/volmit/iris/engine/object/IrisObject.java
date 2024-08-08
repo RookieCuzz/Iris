@@ -19,6 +19,8 @@
 package com.volmit.iris.engine.object;
 
 import com.volmit.iris.Iris;
+import com.volmit.iris.core.link.CustomLeavesLink;
+import com.volmit.iris.core.link.VirtualBlockData;
 import com.volmit.iris.core.loader.IrisData;
 import com.volmit.iris.core.loader.IrisRegistrant;
 import com.volmit.iris.engine.data.cache.AtomicCache;
@@ -44,11 +46,13 @@ import com.volmit.iris.util.plugin.VolmitSender;
 import com.volmit.iris.util.scheduling.IrisLock;
 import com.volmit.iris.util.scheduling.PrecisionStopwatch;
 import com.volmit.iris.util.stream.ProceduralStream;
+import io.github.fisher2911.hmcleaves.data.LeafData;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.*;
@@ -472,14 +476,55 @@ public class IrisObject extends IrisRegistrant {
     //
     public void setUnsigned(int x, int y, int z, Block block) {
 
-        BlockVector v = getSigned(x, y, z);
+            BlockVector v = getSigned(x, y, z);
 
-        if (block == null) {
-            getBlocks().remove(v);
-            getStates().remove(v);
-        } else {
+            if (block == null) {
+                getBlocks().remove(v);
+                getStates().remove(v);
+            } else
+            {
+
+                //牌子作为中介
+                Material type = block.getType();
+
+                if (type==Material.OAK_LEAVES){
+                    System.out.println("1检测到为橡木叶子");
+                    io.github.fisher2911.hmcleaves.data.BlockData
+                            blockData =
+                            CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
+                    if (blockData==null){
+                        return;
+                    }
+
+                    BlockData vblockdata = new VirtualBlockData(Material.OAK_SIGN);
+                    System.out.println("2创建了虚拟牌子");
+                    if (blockData instanceof LeafData leafData){
+                        int distance = leafData.displayDistance();
+                        String id = leafData.id();
+                        System.out.println("树叶id为"+id);
+                        boolean persistence = leafData.displayPersistence();
+                        System.out.println("树叶persistence为"+persistence);
+                        Material material = leafData.realBlockType();
+                        System.out.println("树叶material为"+material);
+                        TileSign tileSign = new TileSign();
+                        tileSign.setLine1("CustomLeaf");
+                        tileSign.setLine2(id);
+                        tileSign.setLine3(persistence+":"+distance);
+                        tileSign.setLine4(String.valueOf(material));
+                        tileSign.setDyeColor(DyeColor.BLACK);
+                        getStates().put(v, tileSign);
+                    }
+
+                    getBlocks().put(v, vblockdata);
+                    System.out.println("3将树叶数据存入");
+                    return;
+                }
+
             BlockData data = block.getBlockData();
             getBlocks().put(v, data);
+
+
+
 
             if (!TileData.hasTileData(block)){
                 return;
@@ -835,7 +880,7 @@ public class IrisObject extends IrisRegistrant {
                             }
                         }
                     }
-                }
+                }   
             }
 
             for (BlockVector g : getBlocks().keySet()) {
