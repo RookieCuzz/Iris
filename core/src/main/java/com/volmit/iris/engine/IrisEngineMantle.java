@@ -323,4 +323,9 @@ public class IrisEngineMantle implements EngineMantle {
 
         return m;
     }
+
+    @Override
+    public String getWorldName() {
+        return null;
+    }
 }

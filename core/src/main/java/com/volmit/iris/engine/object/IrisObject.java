@@ -1003,14 +1003,18 @@ public class IrisObject extends IrisRegistrant {
                         String[] split = line3.split(":");
                         boolean persistent=Boolean.valueOf(split[0]);
                         int distance=Integer.valueOf(split[1]);
-                        VirtualBlockData virtualBlockData = new VirtualBlockData(Material.matchMaterial(tileSign.getLine4()));
+                        Leaves blockData =(Leaves) Material.matchMaterial(tileSign.getLine4()).createBlockData();
+                        blockData.setPersistent(persistent);
+                        blockData.setDistance(distance);
 //                        IrisWorld world = placer.getEngine().getWorld();
 //                        String name = world.name();
-                        Location location = new Location(Bukkit.getWorld("world"), xx, yy, zz);
-                        System.out.println(" x y z :"+xx+";"+yy+";"+zz);
+
+                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        System.out.println("是否在主线程执行"+Bukkit.isPrimaryThread()  );
+
+                        placer.set(xx, yy, zz, blockData);
                         CustomLeavesLink.instance.setCustomBlock(location,leafId,true);
-                        placer.set(xx, yy, zz, virtualBlockData);
-                        return -1;
+                        continue;
 
                     }
 

@@ -215,6 +215,11 @@ public class MantleWriter implements IObjectPlacer {
         return getEngineMantle().getEngine();
     }
 
+    @Override
+    public String getWorldName() {
+        return null;
+    }
+
     /**
      * Set a sphere into the mantle
      *
