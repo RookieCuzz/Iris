@@ -191,6 +191,11 @@ public class TreeSVC implements IrisService {
             public Engine getEngine() {
                 return engine;
             }
+
+            @Override
+            public String getWorldName() {
+                return event.getWorld().getName();
+            }
         };
 
         object.place(

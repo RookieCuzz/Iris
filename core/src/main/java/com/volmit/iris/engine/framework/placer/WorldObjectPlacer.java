@@ -124,4 +124,9 @@ public class WorldObjectPlacer implements IObjectPlacer {
         tile.toBukkitTry(state);
         state.update();
     }
+
+    @Override
+    public String getWorldName() {
+        return world.getName();
+    }
 }

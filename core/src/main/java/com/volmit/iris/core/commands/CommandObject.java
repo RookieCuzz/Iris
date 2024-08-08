@@ -127,6 +127,11 @@ public class CommandObject implements DecreeExecutor {
             public Engine getEngine() {
                 return null;
             }
+
+            @Override
+            public String getWorldName() {
+                return world.getName();
+            }
         };
     }
 

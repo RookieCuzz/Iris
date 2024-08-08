@@ -47,4 +47,6 @@ public interface IObjectPlacer {
     void setTile(int xx, int yy, int zz, TileData<? extends TileState> tile);
 
     Engine getEngine();
+
+    String getWorldName();
 }

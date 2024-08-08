@@ -87,4 +87,10 @@ public class HeightmapObjectPlacer implements IObjectPlacer {
     public Engine getEngine() {
         return null;
     }
+
+    @Override
+    public String getWorldName() {
+        System.out.println("HeightmapObjectPlacer触发方法getWorldName");
+        return oplacer.getWorldName();
+    }
 }
