@@ -46,6 +46,8 @@ import com.volmit.iris.util.plugin.VolmitSender;
 import com.volmit.iris.util.scheduling.IrisLock;
 import com.volmit.iris.util.scheduling.PrecisionStopwatch;
 import com.volmit.iris.util.stream.ProceduralStream;
+import io.github.fisher2911.hmcleaves.HMCLeaves;
+import io.github.fisher2911.hmcleaves.cache.BlockCache;
 import io.github.fisher2911.hmcleaves.data.LeafData;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -989,10 +991,29 @@ public class IrisObject extends IrisRegistrant {
                 if (markers != null && markers.containsKey(g)) {
                     placer.getEngine().getMantle().getMantle().set(xx, yy, zz, new MatterMarker(markers.get(g)));
                 }
-
+                //改动
                 boolean wouldReplace = B.isSolid(placer.get(xx, yy, zz)) && B.isVineBlock(data);
 
                 if (!data.getMaterial().equals(Material.AIR) && !data.getMaterial().equals(Material.CAVE_AIR) && !wouldReplace) {
+                    if (tile instanceof TileSign tileSign &&  tileSign.getLine1().equalsIgnoreCase("CustomLeaf")){
+//                        String name1 = rdata.getEngine().getWorld().name();
+//                        System.out.println("name:"+ name1);
+                        String leafId = tileSign.getLine2();
+                        String line3 = tileSign.getLine3();
+                        String[] split = line3.split(":");
+                        boolean persistent=Boolean.valueOf(split[0]);
+                        int distance=Integer.valueOf(split[1]);
+                        VirtualBlockData virtualBlockData = new VirtualBlockData(Material.matchMaterial(tileSign.getLine4()));
+//                        IrisWorld world = placer.getEngine().getWorld();
+//                        String name = world.name();
+                        Location location = new Location(Bukkit.getWorld("world"), xx, yy, zz);
+                        System.out.println(" x y z :"+xx+";"+yy+";"+zz);
+                        CustomLeavesLink.instance.setCustomBlock(location,leafId,true);
+                        placer.set(xx, yy, zz, virtualBlockData);
+                        return -1;
+
+                    }
+
                     placer.set(xx, yy, zz, data);
                     if (tile != null) {
                         placer.setTile(xx, yy, zz, tile);
