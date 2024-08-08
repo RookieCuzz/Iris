@@ -20,7 +20,6 @@ package com.volmit.iris.engine.object;
 
 import com.volmit.iris.Iris;
 import com.volmit.iris.core.link.CustomLeavesLink;
-import com.volmit.iris.core.link.VirtualBlockData;
 import com.volmit.iris.core.loader.IrisData;
 import com.volmit.iris.core.loader.IrisRegistrant;
 import com.volmit.iris.engine.data.cache.AtomicCache;
@@ -46,8 +45,6 @@ import com.volmit.iris.util.plugin.VolmitSender;
 import com.volmit.iris.util.scheduling.IrisLock;
 import com.volmit.iris.util.scheduling.PrecisionStopwatch;
 import com.volmit.iris.util.stream.ProceduralStream;
-import io.github.fisher2911.hmcleaves.HMCLeaves;
-import io.github.fisher2911.hmcleaves.cache.BlockCache;
 import io.github.fisher2911.hmcleaves.data.LeafData;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -62,7 +59,6 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Leaves;
-import org.bukkit.block.data.type.TurtleEgg;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
@@ -497,8 +493,7 @@ public class IrisObject extends IrisRegistrant {
                     if (blockData==null){
                         return;
                     }
-
-                    BlockData vblockdata = new VirtualBlockData(Material.OAK_SIGN);
+                    BlockData vblockdata = Material.OAK_SIGN.createBlockData();
                     System.out.println("2创建了虚拟牌子");
                     if (blockData instanceof LeafData leafData){
                         int distance = leafData.displayDistance();
