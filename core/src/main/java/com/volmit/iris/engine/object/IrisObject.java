@@ -46,14 +46,13 @@ import com.volmit.iris.util.scheduling.IrisLock;
 import com.volmit.iris.util.scheduling.PrecisionStopwatch;
 import com.volmit.iris.util.stream.ProceduralStream;
 import io.github.fisher2911.hmcleaves.data.LeafData;
+import io.github.fisher2911.hmcleaves.data.LogData;
+import io.github.fisher2911.hmcleaves.data.SaplingData;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.MultipleFacing;
@@ -474,54 +473,118 @@ public class IrisObject extends IrisRegistrant {
     //
     public void setUnsigned(int x, int y, int z, Block block) {
 
-            BlockVector v = getSigned(x, y, z);
+        BlockVector v = getSigned(x, y, z);
 
-            if (block == null) {
-                getBlocks().remove(v);
-                getStates().remove(v);
-            } else
-            {
+        if (block == null) {
+            getBlocks().remove(v);
+            getStates().remove(v);
+        } else {
 
-                //牌子作为中介
-                Material type = block.getType();
+            //牌子作为中介
+            Material type = block.getType();
 
-                if (type==Material.OAK_LEAVES){
-                    System.out.println("1检测到为橡木叶子");
-                    io.github.fisher2911.hmcleaves.data.BlockData
-                            blockData =
-                            CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
-                    if (blockData==null){
-                        return;
-                    }
-                    BlockData vblockdata = Material.OAK_SIGN.createBlockData();
-                    System.out.println("2创建了虚拟牌子");
-                    if (blockData instanceof LeafData leafData){
-                        int distance = leafData.displayDistance();
-                        String id = leafData.id();
-                        System.out.println("树叶id为"+id);
-                        boolean persistence = leafData.displayPersistence();
-                        System.out.println("树叶persistence为"+persistence);
-                        Material material = leafData.realBlockType();
-                        System.out.println("树叶material为"+material);
-                        TileSign tileSign = new TileSign();
-                        tileSign.setLine1("CustomLeaf");
-                        tileSign.setLine2(id);
-                        tileSign.setLine3(persistence+":"+distance);
-                        tileSign.setLine4(String.valueOf(material));
-                        tileSign.setDyeColor(DyeColor.BLACK);
-                        getStates().put(v, tileSign);
-                    }
+            // 检测方块是否为树叶
+            if (
+                    type == Material.OAK_LEAVES || type == Material.SPRUCE_LEAVES || type == Material.JUNGLE_LEAVES || type == Material.ACACIA_LEAVES || type == Material.DARK_OAK_LEAVES || type == Material.MANGROVE_LEAVES || type == Material.CHERRY_LEAVES || type == Material.AZALEA_LEAVES || type == Material.FLOWERING_AZALEA_LEAVES
+            ) {
+                System.out.println("1-检测到为树叶");
+                io.github.fisher2911.hmcleaves.data.BlockData
+                        blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
+                if (blockData==null){
+                    return;
+                }
+                BlockData vblockdata = Material.OAK_SIGN.createBlockData();
+                System.out.println("2创建了虚拟牌子");
+                if (blockData instanceof LeafData leafData){
+                    int distance = leafData.displayDistance();
+                    String id = leafData.id();
+                    System.out.println("树叶id为"+id);
+                    boolean persistence = leafData.displayPersistence();
+                    System.out.println("树叶persistence为"+persistence);
+                    Material material = leafData.realBlockType();
+                    System.out.println("树叶material为"+material);
+                    TileSign tileSign = new TileSign();
+                    tileSign.setLine1("CustomLeaf");
+                    tileSign.setLine2(id);
+                    tileSign.setLine3(persistence+":"+distance);
+                    tileSign.setLine4(String.valueOf(material));
+                    tileSign.setDyeColor(DyeColor.BLACK);
+                    getStates().put(v, tileSign);
+                }
 
-                    getBlocks().put(v, vblockdata);
-                    System.out.println("3将树叶数据存入");
+                getBlocks().put(v, vblockdata);
+                System.out.println("3将树叶数据存入");
+                return;
+            }
+
+            // 检测方块是否为原木
+            if (
+                    type == Material.OAK_LOG || type == Material.SPRUCE_LOG || type == Material.BIRCH_LOG || type == Material.JUNGLE_LOG || type == Material.ACACIA_LOG || type == Material.DARK_OAK_LOG || type == Material.MANGROVE_LOG || type == Material.CHERRY_LOG
+            ) {
+                System.out.println("1-检测到为原木");
+                io.github.fisher2911.hmcleaves.data.BlockData
+                        blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
+                if (blockData==null){
+                    return;
+                }
+                BlockData vblockdata = Material.OAK_SIGN.createBlockData();
+                System.out.println("2-创建了虚拟牌子");
+                if (blockData instanceof LogData logData){
+                    String id = logData.id();
+                    System.out.println("原木id为"+id);
+                    boolean stripped = logData.stripped();
+                    System.out.println("原木stripped为"+stripped);
+                    Axis axis = logData.axis();
+                    System.out.println("原木axis为"+axis);
+                    Material material = logData.realBlockType();
+                    System.out.println("原木material为"+material);
+                    TileSign tileSign = new TileSign();
+                    tileSign.setLine1("CustomLog");
+                    tileSign.setLine2(id);
+                    tileSign.setLine3(stripped + ":" + axis);
+                    tileSign.setLine4(String.valueOf(material));
+                    tileSign.setDyeColor(DyeColor.BLACK);
+                    getStates().put(v, tileSign);
+                }
+
+                getBlocks().put(v, vblockdata);
+                System.out.println("3-将原木数据存入");
+                return;
+            }
+
+            // 检测方块是否为树苗
+            if (
+                    type == Material.OAK_SAPLING || type == Material.SPRUCE_SAPLING || type == Material.BIRCH_SAPLING || type == Material.JUNGLE_SAPLING || type == Material.ACACIA_SAPLING || type == Material.DARK_OAK_SAPLING || type == Material.CHERRY_SAPLING
+            ) {
+                System.out.println("1-检测到为树苗");
+                io.github.fisher2911.hmcleaves.data.BlockData
+                        blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
+                if (blockData==null){
                     return;
                 }
 
+                BlockData vblockdata = Material.OAK_SIGN.createBlockData();
+                System.out.println("2-创建了虚拟牌子");
+
+                if (blockData instanceof SaplingData saplingData){
+                    String id = saplingData.id();
+                    System.out.println("树苗id为"+id);
+                    TileSign tileSign = new TileSign();
+                    tileSign.setLine1("CustomSapling");
+                    tileSign.setLine2(id);
+                    tileSign.setLine3("");
+                    tileSign.setLine4("");
+                    tileSign.setDyeColor(DyeColor.BLACK);
+                    getStates().put(v, tileSign);
+                }
+
+                getBlocks().put(v, vblockdata);
+                System.out.println("3-将树苗数据存入");
+                return;
+            }
+
             BlockData data = block.getBlockData();
             getBlocks().put(v, data);
-
-
-
 
             if (!TileData.hasTileData(block)){
                 return;
@@ -877,7 +940,7 @@ public class IrisObject extends IrisRegistrant {
                             }
                         }
                     }
-                }   
+                }
             }
 
             for (BlockVector g : getBlocks().keySet()) {
@@ -990,6 +1053,8 @@ public class IrisObject extends IrisRegistrant {
                 boolean wouldReplace = B.isSolid(placer.get(xx, yy, zz)) && B.isVineBlock(data);
 
                 if (!data.getMaterial().equals(Material.AIR) && !data.getMaterial().equals(Material.CAVE_AIR) && !wouldReplace) {
+
+                    // 自定义树叶
                     if (tile instanceof TileSign tileSign &&  tileSign.getLine1().equalsIgnoreCase("CustomLeaf")){
 //                        String name1 = rdata.getEngine().getWorld().name();
 //                        System.out.println("name:"+ name1);
@@ -1007,11 +1072,38 @@ public class IrisObject extends IrisRegistrant {
                         Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
                         System.out.println("是否在主线程执行"+Bukkit.isPrimaryThread()  );
 
-                        placer.set(xx, yy, zz, blockData);
-                        CustomLeavesLink.instance.setCustomBlock(location,leafId,true);
+//                        placer.set(xx, yy, zz, blockData);
+                        CustomLeavesLink.instance.setCustomBlock(location, leafId, true);
                         continue;
 
                     }
+
+                    // 自定义木头
+                    if (tile instanceof TileSign tileSign &&  tileSign.getLine1().equalsIgnoreCase("CustomLog")){
+
+                        // 获取木头ID
+                        String logId = tileSign.getLine2();
+
+                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        System.out.println("是否在主线程执行"+Bukkit.isPrimaryThread()  );
+
+                        CustomLeavesLink.instance.setCustomBlock(location, logId, true);
+                        continue;
+                    }
+
+                    // 自定义树苗
+                    if (tile instanceof TileSign tileSign &&  tileSign.getLine1().equalsIgnoreCase("CustomSapling")){
+
+                        // 获取树苗ID
+                        String saplingId = tileSign.getLine2();
+
+                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        System.out.println("是否在主线程执行"+Bukkit.isPrimaryThread());
+
+                        CustomLeavesLink.instance.setCustomBlock(location, saplingId, true);
+                        continue;
+                    }
+
 
                     placer.set(xx, yy, zz, data);
                     if (tile != null) {
