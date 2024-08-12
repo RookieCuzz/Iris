@@ -1107,8 +1107,7 @@ public class IrisObject extends IrisRegistrant {
                     if (tile instanceof TileSign tileSign && tileSign.getLine1().equalsIgnoreCase("CustomFurniture")) {
 
                         // 获取家具ID
-                        String blockId = tileSign.getLine2();
-                        System.out.println("家具id:" + blockId);
+                        String furnitureId = tileSign.getLine2();
 
                         // 获取家具yaw
                         String line3 = tileSign.getLine3();
@@ -1131,9 +1130,8 @@ public class IrisObject extends IrisRegistrant {
                         };
 
                         Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
-                        System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
-                        OraxenFurniture.place(blockId, location, yaw, blockFace);
+                        OraxenFurniture.place(furnitureId, location, yaw, blockFace);
                         continue;
                     }
 
