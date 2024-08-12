@@ -48,15 +48,14 @@ import com.volmit.iris.util.stream.ProceduralStream;
 import io.github.fisher2911.hmcleaves.data.LeafData;
 import io.github.fisher2911.hmcleaves.data.LogData;
 import io.github.fisher2911.hmcleaves.data.SaplingData;
+import io.th0rgal.oraxen.api.OraxenFurniture;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.*;
 import org.bukkit.block.*;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.MultipleFacing;
-import org.bukkit.block.data.Waterlogged;
+import org.bukkit.block.data.*;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
@@ -490,23 +489,23 @@ public class IrisObject extends IrisRegistrant {
                 System.out.println("1-检测到为树叶");
                 io.github.fisher2911.hmcleaves.data.BlockData
                         blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
-                if (blockData==null){
+                if (blockData == null) {
                     return;
                 }
                 BlockData vblockdata = Material.OAK_SIGN.createBlockData();
                 System.out.println("2创建了虚拟牌子");
-                if (blockData instanceof LeafData leafData){
+                if (blockData instanceof LeafData leafData) {
                     int distance = leafData.displayDistance();
                     String id = leafData.id();
-                    System.out.println("树叶id为"+id);
+                    System.out.println("树叶id为" + id);
                     boolean persistence = leafData.displayPersistence();
-                    System.out.println("树叶persistence为"+persistence);
+                    System.out.println("树叶persistence为" + persistence);
                     Material material = leafData.realBlockType();
-                    System.out.println("树叶material为"+material);
+                    System.out.println("树叶material为" + material);
                     TileSign tileSign = new TileSign();
                     tileSign.setLine1("CustomLeaf");
                     tileSign.setLine2(id);
-                    tileSign.setLine3(persistence+":"+distance);
+                    tileSign.setLine3(persistence + ":" + distance);
                     tileSign.setLine4(String.valueOf(material));
                     tileSign.setDyeColor(DyeColor.BLACK);
                     getStates().put(v, tileSign);
@@ -524,20 +523,20 @@ public class IrisObject extends IrisRegistrant {
                 System.out.println("1-检测到为原木");
                 io.github.fisher2911.hmcleaves.data.BlockData
                         blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
-                if (blockData==null){
+                if (blockData == null) {
                     return;
                 }
                 BlockData vblockdata = Material.OAK_SIGN.createBlockData();
                 System.out.println("2-创建了虚拟牌子");
-                if (blockData instanceof LogData logData){
+                if (blockData instanceof LogData logData) {
                     String id = logData.id();
-                    System.out.println("原木id为"+id);
+                    System.out.println("原木id为" + id);
                     boolean stripped = logData.stripped();
-                    System.out.println("原木stripped为"+stripped);
+                    System.out.println("原木stripped为" + stripped);
                     Axis axis = logData.axis();
-                    System.out.println("原木axis为"+axis);
+                    System.out.println("原木axis为" + axis);
                     Material material = logData.realBlockType();
-                    System.out.println("原木material为"+material);
+                    System.out.println("原木material为" + material);
                     TileSign tileSign = new TileSign();
                     tileSign.setLine1("CustomLog");
                     tileSign.setLine2(id);
@@ -559,16 +558,16 @@ public class IrisObject extends IrisRegistrant {
                 System.out.println("1-检测到为树苗");
                 io.github.fisher2911.hmcleaves.data.BlockData
                         blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
-                if (blockData==null){
+                if (blockData == null) {
                     return;
                 }
 
                 BlockData vblockdata = Material.OAK_SIGN.createBlockData();
                 System.out.println("2-创建了虚拟牌子");
 
-                if (blockData instanceof SaplingData saplingData){
+                if (blockData instanceof SaplingData saplingData) {
                     String id = saplingData.id();
-                    System.out.println("树苗id为"+id);
+                    System.out.println("树苗id为" + id);
                     TileSign tileSign = new TileSign();
                     tileSign.setLine1("CustomSapling");
                     tileSign.setLine2(id);
@@ -586,7 +585,7 @@ public class IrisObject extends IrisRegistrant {
             BlockData data = block.getBlockData();
             getBlocks().put(v, data);
 
-            if (!TileData.hasTileData(block)){
+            if (!TileData.hasTileData(block)) {
                 return;
             }
             Future<TileData> future = Bukkit.getScheduler().callSyncMethod(Iris.instance, new Callable<TileData>() {
@@ -870,7 +869,7 @@ public class IrisObject extends IrisRegistrant {
             Engine engine = rdata.getEngine();
             BlockVector offset = new BlockVector(config.getTranslate().getX(), config.getTranslate().getY(), config.getTranslate().getZ());
             for (int i = x - Math.floorDiv(w, 2) + (int) offset.getX(); i <= x + Math.floorDiv(w, 2) - (w % 2 == 0 ? 1 : 0) + (int) offset.getX(); i++) {
-                for (int j = y - Math.floorDiv(h, 2)  + (int) offset.getY(); j <= y + Math.floorDiv(h, 2) - (h % 2 == 0 ? 1 : 0) + (int) offset.getY(); j++) {
+                for (int j = y - Math.floorDiv(h, 2) + (int) offset.getY(); j <= y + Math.floorDiv(h, 2) - (h % 2 == 0 ? 1 : 0) + (int) offset.getY(); j++) {
                     for (int k = z - Math.floorDiv(d, 2) + (int) offset.getZ(); k <= z + Math.floorDiv(d, 2) - (d % 2 == 0 ? 1 : 0) + (int) offset.getX(); k++) {
                         PlacedObject p = engine.getObjectPlacement(i, j, k);
                         if (p == null) continue;
@@ -1055,22 +1054,22 @@ public class IrisObject extends IrisRegistrant {
                 if (!data.getMaterial().equals(Material.AIR) && !data.getMaterial().equals(Material.CAVE_AIR) && !wouldReplace) {
 
                     // 自定义树叶
-                    if (tile instanceof TileSign tileSign &&  tileSign.getLine1().equalsIgnoreCase("CustomLeaf")){
+                    if (tile instanceof TileSign tileSign && tileSign.getLine1().equalsIgnoreCase("CustomLeaf")) {
 //                        String name1 = rdata.getEngine().getWorld().name();
 //                        System.out.println("name:"+ name1);
                         String leafId = tileSign.getLine2();
                         String line3 = tileSign.getLine3();
                         String[] split = line3.split(":");
-                        boolean persistent=Boolean.valueOf(split[0]);
-                        int distance=Integer.valueOf(split[1]);
-                        Leaves blockData =(Leaves) Material.matchMaterial(tileSign.getLine4()).createBlockData();
+                        boolean persistent = Boolean.valueOf(split[0]);
+                        int distance = Integer.valueOf(split[1]);
+                        Leaves blockData = (Leaves) Material.matchMaterial(tileSign.getLine4()).createBlockData();
                         blockData.setPersistent(persistent);
                         blockData.setDistance(distance);
 //                        IrisWorld world = placer.getEngine().getWorld();
 //                        String name = world.name();
 
                         Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
-                        System.out.println("是否在主线程执行"+Bukkit.isPrimaryThread()  );
+                        System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
 //                        placer.set(xx, yy, zz, blockData);
                         CustomLeavesLink.instance.setCustomBlock(location, leafId, true);
@@ -1079,28 +1078,62 @@ public class IrisObject extends IrisRegistrant {
                     }
 
                     // 自定义木头
-                    if (tile instanceof TileSign tileSign &&  tileSign.getLine1().equalsIgnoreCase("CustomLog")){
+                    if (tile instanceof TileSign tileSign && tileSign.getLine1().equalsIgnoreCase("CustomLog")) {
 
                         // 获取木头ID
                         String logId = tileSign.getLine2();
 
                         Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
-                        System.out.println("是否在主线程执行"+Bukkit.isPrimaryThread()  );
+                        System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
                         CustomLeavesLink.instance.setCustomBlock(location, logId, true);
                         continue;
                     }
 
                     // 自定义树苗
-                    if (tile instanceof TileSign tileSign &&  tileSign.getLine1().equalsIgnoreCase("CustomSapling")){
+                    if (tile instanceof TileSign tileSign && tileSign.getLine1().equalsIgnoreCase("CustomSapling")) {
 
                         // 获取树苗ID
                         String saplingId = tileSign.getLine2();
 
                         Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
-                        System.out.println("是否在主线程执行"+Bukkit.isPrimaryThread());
+                        System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
                         CustomLeavesLink.instance.setCustomBlock(location, saplingId, true);
+                        continue;
+                    }
+
+                    // 自定义家具
+                    if (tile instanceof TileSign tileSign && tileSign.getLine1().equalsIgnoreCase("CustomFurniture")) {
+
+                        // 获取家具ID
+                        String blockId = tileSign.getLine2();
+                        System.out.println("家具id:" + blockId);
+
+                        // 获取家具yaw
+                        String line3 = tileSign.getLine3();
+                        String[] split = line3.split(":");
+                        float yaw = Float.parseFloat(split[0]);
+
+                        // 获取家具face
+                        BlockFace blockFace = switch (split[1]) {
+                            case "N", "北" -> BlockFace.NORTH;
+                            case "E", "东" -> BlockFace.EAST;
+                            case "S", "南" -> BlockFace.SOUTH;
+                            case "W", "西" -> BlockFace.WEST;
+                            case "U", "上" -> BlockFace.UP;
+                            case "D", "下" -> BlockFace.DOWN;
+                            case "NE", "东北" -> BlockFace.NORTH_EAST;
+                            case "NW", "西北" -> BlockFace.NORTH_WEST;
+                            case "SE", "东南" -> BlockFace.SOUTH_EAST;
+                            case "SW", "西南" -> BlockFace.SOUTH_WEST;
+                            default -> BlockFace.SELF;
+                        };
+
+                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
+
+                        OraxenFurniture.place(blockId, location, yaw, blockFace);
                         continue;
                     }
 

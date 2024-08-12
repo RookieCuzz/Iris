@@ -96,15 +96,25 @@ public interface TileData<T extends TileState> extends Cloneable {
             case PAINTING:
             case ARMOR_STAND:
             case OAK_SIGN:
+            case OAK_WALL_SIGN:
             case SPRUCE_SIGN:
+            case SPRUCE_WALL_SIGN:
             case BIRCH_SIGN:
+            case BIRCH_WALL_SIGN:
             case ACACIA_SIGN:
+            case ACACIA_WALL_SIGN:
             case JUNGLE_SIGN:
+            case JUNGLE_WALL_SIGN:
             case DARK_OAK_SIGN:
+            case DARK_OAK_WALL_SIGN:
             case CRIMSON_SIGN:
+            case CRIMSON_WALL_SIGN:
             case WARPED_SIGN:
+            case WARPED_WALL_SIGN:
             case MANGROVE_SIGN:
+            case MANGROVE_WALL_SIGN:
             case BAMBOO_SIGN:
+            case BAMBOO_WALL_SIGN:
             case OAK_HANGING_SIGN:
             case SPRUCE_HANGING_SIGN:
             case BIRCH_HANGING_SIGN:
