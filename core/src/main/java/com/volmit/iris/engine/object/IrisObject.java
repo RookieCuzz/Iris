@@ -45,6 +45,7 @@ import com.volmit.iris.util.plugin.VolmitSender;
 import com.volmit.iris.util.scheduling.IrisLock;
 import com.volmit.iris.util.scheduling.PrecisionStopwatch;
 import com.volmit.iris.util.stream.ProceduralStream;
+import io.github.fisher2911.hmcleaves.data.CaveVineData;
 import io.github.fisher2911.hmcleaves.data.LeafData;
 import io.github.fisher2911.hmcleaves.data.LogData;
 import io.github.fisher2911.hmcleaves.data.SaplingData;
@@ -489,11 +490,13 @@ public class IrisObject extends IrisRegistrant {
                 System.out.println("1-检测到为树叶");
                 io.github.fisher2911.hmcleaves.data.BlockData
                         blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
-                if (blockData == null) {
+                if (blockData.id().equalsIgnoreCase("empty")) {
                     return;
                 }
+
                 BlockData vblockdata = Material.OAK_SIGN.createBlockData();
                 System.out.println("2创建了虚拟牌子");
+
                 if (blockData instanceof LeafData leafData) {
                     int distance = leafData.displayDistance();
                     String id = leafData.id();
@@ -523,11 +526,13 @@ public class IrisObject extends IrisRegistrant {
                 System.out.println("1-检测到为原木");
                 io.github.fisher2911.hmcleaves.data.BlockData
                         blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
-                if (blockData == null) {
+                if (blockData.id().equalsIgnoreCase("empty")) {
                     return;
                 }
+
                 BlockData vblockdata = Material.OAK_SIGN.createBlockData();
                 System.out.println("2-创建了虚拟牌子");
+
                 if (blockData instanceof LogData logData) {
                     String id = logData.id();
                     System.out.println("原木id为" + id);
@@ -558,7 +563,7 @@ public class IrisObject extends IrisRegistrant {
                 System.out.println("1-检测到为树苗");
                 io.github.fisher2911.hmcleaves.data.BlockData
                         blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
-                if (blockData == null) {
+                if (blockData.id().equalsIgnoreCase("empty")) {
                     return;
                 }
 
@@ -579,6 +584,37 @@ public class IrisObject extends IrisRegistrant {
 
                 getBlocks().put(v, vblockdata);
                 System.out.println("3-将树苗数据存入");
+                return;
+            }
+
+            // 检测是否为藤蔓
+            if (
+                    type == Material.CAVE_VINES || type == Material.CAVE_VINES_PLANT
+            ) {
+                System.out.println("1-检测到为藤蔓");
+                io.github.fisher2911.hmcleaves.data.BlockData
+                        blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
+                if (blockData.id().equalsIgnoreCase("empty")) {
+                    return;
+                }
+
+                BlockData vblockdata = Material.OAK_SIGN.createBlockData();
+                System.out.println("2-创建了虚拟牌子");
+
+                if (blockData instanceof CaveVineData caveVineData) {
+                    String id = caveVineData.id();
+                    System.out.println("藤蔓id为" + id);
+                    TileSign tileSign = new TileSign();
+                    tileSign.setLine1("CustomCaveVine");
+                    tileSign.setLine2(id);
+                    tileSign.setLine3("");
+                    tileSign.setLine4("");
+                    tileSign.setDyeColor(DyeColor.BLACK);
+                    getStates().put(v, tileSign);
+                }
+
+                getBlocks().put(v, vblockdata);
+                System.out.println("3-将藤蔓数据存入");
                 return;
             }
 
@@ -1100,6 +1136,19 @@ public class IrisObject extends IrisRegistrant {
                         System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
                         CustomLeavesLink.instance.setCustomBlock(location, saplingId, true);
+                        continue;
+                    }
+
+                    // 自定义藤蔓
+                    if (tile instanceof TileSign tileSign && tileSign.getLine1().equalsIgnoreCase("CustomCaveVine")) {
+
+                        // 获取藤蔓ID
+                        String caveVineId = tileSign.getLine2();
+
+                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
+
+                        CustomLeavesLink.instance.setCustomBlock(location, caveVineId, true);
                         continue;
                     }
 
