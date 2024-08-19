@@ -489,7 +489,7 @@ public class IrisObject extends IrisRegistrant {
                 System.out.println("1-检测到为树叶");
                 io.github.fisher2911.hmcleaves.data.BlockData
                         blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
-                if (blockData == null) {
+                if (blockData.id().equalsIgnoreCase("empty")) {
                     return;
                 }
                 BlockData vblockdata = Material.OAK_SIGN.createBlockData();
@@ -523,7 +523,7 @@ public class IrisObject extends IrisRegistrant {
                 System.out.println("1-检测到为原木");
                 io.github.fisher2911.hmcleaves.data.BlockData
                         blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
-                if (blockData == null) {
+                if (blockData.id().equalsIgnoreCase("empty")) {
                     return;
                 }
                 BlockData vblockdata = Material.OAK_SIGN.createBlockData();
@@ -558,7 +558,7 @@ public class IrisObject extends IrisRegistrant {
                 System.out.println("1-检测到为树苗");
                 io.github.fisher2911.hmcleaves.data.BlockData
                         blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
-                if (blockData == null) {
+                if (blockData.id().equalsIgnoreCase("empty")) {
                     return;
                 }
 
