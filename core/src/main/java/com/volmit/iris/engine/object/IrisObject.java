@@ -49,6 +49,9 @@ import io.github.fisher2911.hmcleaves.data.CaveVineData;
 import io.github.fisher2911.hmcleaves.data.LeafData;
 import io.github.fisher2911.hmcleaves.data.LogData;
 import io.github.fisher2911.hmcleaves.data.SaplingData;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import io.th0rgal.oraxen.api.OraxenFurniture;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -1160,11 +1163,11 @@ public class IrisObject extends IrisRegistrant {
 
                         // 获取家具yaw
                         String line3 = tileSign.getLine3();
-                        String[] split = line3.split(":");
-                        float yaw = Float.parseFloat(split[0]);
+                        String[] line3Info = line3.split(":");
+                        float yaw = Float.parseFloat(line3Info[0]);
 
                         // 获取家具face
-                        BlockFace blockFace = switch (split[1]) {
+                        BlockFace blockFace = switch (line3Info[1]) {
                             case "N", "北" -> BlockFace.NORTH;
                             case "E", "东" -> BlockFace.EAST;
                             case "S", "南" -> BlockFace.SOUTH;
@@ -1181,6 +1184,28 @@ public class IrisObject extends IrisRegistrant {
                         Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
 
                         OraxenFurniture.place(furnitureId, location, yaw, blockFace);
+                        continue;
+                    }
+
+                    // MythicMobs 怪物
+                    if (tile instanceof TileSign tileSign && tileSign.getLine1().equalsIgnoreCase("MythicMobs")) {
+
+                        // 获取MM怪物id和数量
+                        String line2 = tileSign.getLine2();
+                        String[] line2Info = line2.split(":");
+                        String mobId = line2Info[0];
+                        int mobAmount = Integer.parseInt(line2Info[1]);
+
+                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+
+                        MythicMob mob = MythicBukkit.inst().getMobManager().getMythicMob(mobId).orElse(null);
+
+                        if(mob != null){
+                            for (int mobCount = 0; mobCount < mobAmount; mobCount++) {
+                                mob.spawn(BukkitAdapter.adapt(location),1);
+                            }
+                        }
+
                         continue;
                     }
 
