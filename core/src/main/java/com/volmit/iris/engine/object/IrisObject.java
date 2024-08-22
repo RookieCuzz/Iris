@@ -45,9 +45,13 @@ import com.volmit.iris.util.plugin.VolmitSender;
 import com.volmit.iris.util.scheduling.IrisLock;
 import com.volmit.iris.util.scheduling.PrecisionStopwatch;
 import com.volmit.iris.util.stream.ProceduralStream;
+import io.github.fisher2911.hmcleaves.data.CaveVineData;
 import io.github.fisher2911.hmcleaves.data.LeafData;
 import io.github.fisher2911.hmcleaves.data.LogData;
 import io.github.fisher2911.hmcleaves.data.SaplingData;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import io.th0rgal.oraxen.api.OraxenFurniture;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -492,8 +496,10 @@ public class IrisObject extends IrisRegistrant {
                 if (blockData.id().equalsIgnoreCase("empty")) {
                     return;
                 }
+
                 BlockData vblockdata = Material.OAK_SIGN.createBlockData();
                 System.out.println("2创建了虚拟牌子");
+
                 if (blockData instanceof LeafData leafData) {
                     int distance = leafData.displayDistance();
                     String id = leafData.id();
@@ -526,8 +532,10 @@ public class IrisObject extends IrisRegistrant {
                 if (blockData.id().equalsIgnoreCase("empty")) {
                     return;
                 }
+
                 BlockData vblockdata = Material.OAK_SIGN.createBlockData();
                 System.out.println("2-创建了虚拟牌子");
+
                 if (blockData instanceof LogData logData) {
                     String id = logData.id();
                     System.out.println("原木id为" + id);
@@ -579,6 +587,37 @@ public class IrisObject extends IrisRegistrant {
 
                 getBlocks().put(v, vblockdata);
                 System.out.println("3-将树苗数据存入");
+                return;
+            }
+
+            // 检测是否为藤蔓
+            if (
+                    type == Material.CAVE_VINES || type == Material.CAVE_VINES_PLANT
+            ) {
+                System.out.println("1-检测到为藤蔓");
+                io.github.fisher2911.hmcleaves.data.BlockData
+                        blockData = CustomLeavesLink.instance.getBlockDataAt(block.getLocation());
+                if (blockData.id().equalsIgnoreCase("empty")) {
+                    return;
+                }
+
+                BlockData vblockdata = Material.OAK_SIGN.createBlockData();
+                System.out.println("2-创建了虚拟牌子");
+
+                if (blockData instanceof CaveVineData caveVineData) {
+                    String id = caveVineData.id();
+                    System.out.println("藤蔓id为" + id);
+                    TileSign tileSign = new TileSign();
+                    tileSign.setLine1("CustomCaveVine");
+                    tileSign.setLine2(id);
+                    tileSign.setLine3("");
+                    tileSign.setLine4("");
+                    tileSign.setDyeColor(DyeColor.BLACK);
+                    getStates().put(v, tileSign);
+                }
+
+                getBlocks().put(v, vblockdata);
+                System.out.println("3-将藤蔓数据存入");
                 return;
             }
 
@@ -1103,6 +1142,19 @@ public class IrisObject extends IrisRegistrant {
                         continue;
                     }
 
+                    // 自定义藤蔓
+                    if (tile instanceof TileSign tileSign && tileSign.getLine1().equalsIgnoreCase("CustomCaveVine")) {
+
+                        // 获取藤蔓ID
+                        String caveVineId = tileSign.getLine2();
+
+                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
+
+                        CustomLeavesLink.instance.setCustomBlock(location, caveVineId, true);
+                        continue;
+                    }
+
                     // 自定义家具
                     if (tile instanceof TileSign tileSign && tileSign.getLine1().equalsIgnoreCase("CustomFurniture")) {
 
@@ -1111,11 +1163,11 @@ public class IrisObject extends IrisRegistrant {
 
                         // 获取家具yaw
                         String line3 = tileSign.getLine3();
-                        String[] split = line3.split(":");
-                        float yaw = Float.parseFloat(split[0]);
+                        String[] line3Info = line3.split(":");
+                        float yaw = Float.parseFloat(line3Info[0]);
 
                         // 获取家具face
-                        BlockFace blockFace = switch (split[1]) {
+                        BlockFace blockFace = switch (line3Info[1]) {
                             case "N", "北" -> BlockFace.NORTH;
                             case "E", "东" -> BlockFace.EAST;
                             case "S", "南" -> BlockFace.SOUTH;
@@ -1132,6 +1184,28 @@ public class IrisObject extends IrisRegistrant {
                         Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
 
                         OraxenFurniture.place(furnitureId, location, yaw, blockFace);
+                        continue;
+                    }
+
+                    // MythicMobs 怪物
+                    if (tile instanceof TileSign tileSign && tileSign.getLine1().equalsIgnoreCase("MythicMobs")) {
+
+                        // 获取MM怪物id和数量
+                        String line2 = tileSign.getLine2();
+                        String[] line2Info = line2.split(":");
+                        String mobId = line2Info[0];
+                        int mobAmount = Integer.parseInt(line2Info[1]);
+
+                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+
+                        MythicMob mob = MythicBukkit.inst().getMobManager().getMythicMob(mobId).orElse(null);
+
+                        if(mob != null){
+                            for (int mobCount = 0; mobCount < mobAmount; mobCount++) {
+                                mob.spawn(BukkitAdapter.adapt(location),1);
+                            }
+                        }
+
                         continue;
                     }
 
