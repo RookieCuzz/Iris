@@ -176,18 +176,18 @@ public class JigsawEditor implements Listener {
         exit();
         try {
             JSONObject j = new JSONObject(new Gson().toJson(piece));
-            // Remove sub-key
-            removeKey(j, "placementOptions", "translateCenter"); // should work
-            J.attempt(() -> j.getJSONObject("placementOptions").remove("translateCenter")); // otherwise
-
-            // remove root key
-            removeKey(j, "placementOptions"); // should work
-            j.remove("placementOptions"); // otherwise
-
-            // Remove key in all objects in array
-            for (JSONObject i : getObjectsInArray(j)) {
-                removeKey(i, "rotateConnector");
-            }
+//            // Remove sub-key
+//            removeKey(j, "placementOptions", "translateCenter"); // should work
+//            J.attempt(() -> j.getJSONObject("placementOptions").remove("translateCenter")); // otherwise
+//
+//            // remove root key
+//            removeKey(j, "placementOptions"); // should work
+//            j.remove("placementOptions"); // otherwise
+//
+//            // Remove key in all objects in array
+//            for (JSONObject i : getObjectsInArray(j)) {
+//                removeKey(i, "rotateConnector");
+//            }
 
             IO.writeAll(targetSaveLocation, j.toString(4));
         } catch (IOException e) {

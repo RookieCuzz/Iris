@@ -26,6 +26,7 @@ import com.volmit.iris.engine.data.cache.AtomicCache;
 import com.volmit.iris.engine.framework.Engine;
 import com.volmit.iris.engine.framework.PlacedObject;
 import com.volmit.iris.engine.framework.placer.HeightmapObjectPlacer;
+import com.volmit.iris.engine.framework.placer.WorldObjectPlacer;
 import com.volmit.iris.util.collection.KList;
 import com.volmit.iris.util.collection.KMap;
 import com.volmit.iris.util.context.IrisContext;
@@ -1107,7 +1108,13 @@ public class IrisObject extends IrisRegistrant {
 //                        IrisWorld world = placer.getEngine().getWorld();
 //                        String name = world.name();
 
-                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        Location location = null;
+                        if (placer instanceof WorldObjectPlacer) {
+                            location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy + Bukkit.getWorld(placer.getWorldName()).getMinHeight(), zz);
+                        } else {
+                            location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        }
+
                         System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
 //                        placer.set(xx, yy, zz, blockData);
@@ -1122,7 +1129,13 @@ public class IrisObject extends IrisRegistrant {
                         // 获取木头ID
                         String logId = tileSign.getLine2();
 
-                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        Location location = null;
+                        if (placer instanceof WorldObjectPlacer) {
+                            location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy + Bukkit.getWorld(placer.getWorldName()).getMinHeight(), zz);
+                        } else {
+                            location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        }
+
                         System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
                         CustomLeavesLink.instance.setCustomBlock(location, logId, true);
@@ -1135,7 +1148,13 @@ public class IrisObject extends IrisRegistrant {
                         // 获取树苗ID
                         String saplingId = tileSign.getLine2();
 
-                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        Location location = null;
+                        if (placer instanceof WorldObjectPlacer) {
+                            location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy + Bukkit.getWorld(placer.getWorldName()).getMinHeight(), zz);
+                        } else {
+                            location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        }
+
                         System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
                         CustomLeavesLink.instance.setCustomBlock(location, saplingId, true);
@@ -1148,7 +1167,13 @@ public class IrisObject extends IrisRegistrant {
                         // 获取藤蔓ID
                         String caveVineId = tileSign.getLine2();
 
-                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        Location location = null;
+                        if (placer instanceof WorldObjectPlacer) {
+                            location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy + Bukkit.getWorld(placer.getWorldName()).getMinHeight(), zz);
+                        } else {
+                            location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        }
+
                         System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
                         CustomLeavesLink.instance.setCustomBlock(location, caveVineId, true);
@@ -1181,7 +1206,12 @@ public class IrisObject extends IrisRegistrant {
                             default -> BlockFace.SELF;
                         };
 
-                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        Location location = null;
+                        if (placer instanceof WorldObjectPlacer) {
+                            location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy + Bukkit.getWorld(placer.getWorldName()).getMinHeight(), zz);
+                        } else {
+                            location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        }
 
                         OraxenFurniture.place(furnitureId, location, yaw, blockFace);
                         continue;
@@ -1196,13 +1226,18 @@ public class IrisObject extends IrisRegistrant {
                         String mobId = line2Info[0];
                         int mobAmount = Integer.parseInt(line2Info[1]);
 
-                        Location location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        Location location = null;
+                        if (placer instanceof WorldObjectPlacer) {
+                            location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy + Bukkit.getWorld(placer.getWorldName()).getMinHeight(), zz);
+                        } else {
+                            location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
+                        }
 
                         MythicMob mob = MythicBukkit.inst().getMobManager().getMythicMob(mobId).orElse(null);
 
-                        if(mob != null){
+                        if (mob != null) {
                             for (int mobCount = 0; mobCount < mobAmount; mobCount++) {
-                                mob.spawn(BukkitAdapter.adapt(location),1);
+                                mob.spawn(BukkitAdapter.adapt(location), 1);
                             }
                         }
 
