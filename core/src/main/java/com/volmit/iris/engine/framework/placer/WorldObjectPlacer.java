@@ -52,8 +52,11 @@ public class WorldObjectPlacer implements IObjectPlacer {
 
     @Override
     public void set(int x, int y, int z, BlockData d) {
+        if(d.getMaterial() == Material.BEDROCK ){
+            System.out.println("基岩方块不放置");
+            return;
+        }
         Block block = world.getBlockAt(x, y + world.getMinHeight(), z);
-
         if (y <= world.getMinHeight() || block.getType() == Material.BEDROCK) return;
         InventorySlotType slot = null;
         if (B.isStorageChest(d)) {
