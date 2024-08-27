@@ -1117,6 +1117,7 @@ public class IrisObject extends IrisRegistrant {
 
                         System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
+                        Bukkit.getWorld(placer.getWorldName()).getBlockAt(location).setType(Material.VOID_AIR);
 //                        placer.set(xx, yy, zz, blockData);
                         CustomLeavesLink.instance.setCustomBlock(location, leafId, true);
                         continue;
@@ -1138,6 +1139,7 @@ public class IrisObject extends IrisRegistrant {
 
                         System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
+                        Bukkit.getWorld(placer.getWorldName()).getBlockAt(location).setType(Material.VOID_AIR);
                         CustomLeavesLink.instance.setCustomBlock(location, logId, true);
                         continue;
                     }
@@ -1157,6 +1159,7 @@ public class IrisObject extends IrisRegistrant {
 
                         System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
+                        Bukkit.getWorld(placer.getWorldName()).getBlockAt(location).setType(Material.VOID_AIR);
                         CustomLeavesLink.instance.setCustomBlock(location, saplingId, true);
                         continue;
                     }
@@ -1176,6 +1179,7 @@ public class IrisObject extends IrisRegistrant {
 
                         System.out.println("是否在主线程执行" + Bukkit.isPrimaryThread());
 
+                        Bukkit.getWorld(placer.getWorldName()).getBlockAt(location).setType(Material.VOID_AIR);
                         CustomLeavesLink.instance.setCustomBlock(location, caveVineId, true);
                         continue;
                     }
@@ -1213,6 +1217,7 @@ public class IrisObject extends IrisRegistrant {
                             location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
                         }
 
+                        Bukkit.getWorld(placer.getWorldName()).getBlockAt(location).setType(Material.VOID_AIR);
                         OraxenFurniture.place(furnitureId, location, yaw, blockFace);
                         continue;
                     }
@@ -1233,6 +1238,7 @@ public class IrisObject extends IrisRegistrant {
                             location = new Location(Bukkit.getWorld(placer.getWorldName()), xx, yy, zz);
                         }
 
+                        Bukkit.getWorld(placer.getWorldName()).getBlockAt(location).setType(Material.VOID_AIR);
                         MythicMob mob = MythicBukkit.inst().getMobManager().getMythicMob(mobId).orElse(null);
 
                         if (mob != null) {
